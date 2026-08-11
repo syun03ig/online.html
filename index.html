@@ -22,7 +22,6 @@
     .btn-b { background-color: #e74c3c; color: white; }
     
     .hidden { display: none; }
-    .sending { text-align: center; padding: 20px; font-weight: bold; color: #666; }
   </style>
 </head>
 <body>
@@ -55,11 +54,6 @@
     </button>
   </div>
 
-  <!-- 送信中表示 -->
-  <div id="step-sending" class="hidden sending">
-    送信中...
-  </div>
-
   <!-- STEP 3: 送信完了画面 -->
   <div id="step-3" class="hidden" style="text-align: center; padding: 20px 0;">
     <h2 style="color: #2ecc71; font-size: 22px; margin-bottom: 10px;">ご回答ありがとうございました！</h2>
@@ -69,9 +63,14 @@
   </div>
 </div>
 
-<script>
-  const GAS_URL = "https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec";
+<!-- 送信用隠しフォーム -->
+<iframe name="dummyIframe" id="dummyIframe" style="display:none;"></iframe>
+<form id="gasForm" action="https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec" method="POST" target="dummyIframe" style="display:none;">
+  <input type="text" name="name" id="gas_name">
+  <input type="text" name="choice" id="gas_choice">
+</form>
 
+<script>
   let currentName = "";
 
   function goToStep2() {
@@ -88,25 +87,14 @@
   function submitAnswer(choice) {
     if (!confirm(`「${choice}」で送信してよろしいですか？`)) return;
 
-    document.getElementById("step-2").classList.add("hidden");
-    document.getElementById("step-sending").classList.remove("hidden");
+    // フォームに値をセットして送信
+    document.getElementById("gas_name").value = currentName;
+    document.getElementById("gas_choice").value = choice;
+    document.getElementById("gasForm").submit();
 
-    fetch(GAS_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: currentName, choice: choice })
-    })
-    .then(() => {
-      document.getElementById("step-sending").classList.add("hidden");
-      document.getElementById("step-3").classList.remove("hidden");
-    })
-    .catch(err => {
-      alert("送信に失敗しました。時間をおいて再度お試しください。");
-      document.getElementById("step-sending").classList.add("hidden");
-      document.getElementById("step-2").classList.remove("hidden");
-      console.error(err);
-    });
+    // 画面切り替え
+    document.getElementById("step-2").classList.add("hidden");
+    document.getElementById("step-3").classList.remove("hidden");
   }
 </script>
 
