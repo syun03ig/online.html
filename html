@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アルバイト休日制度アンケート</title>
+  <style>
+    * { box-sizing: border-box; font-family: "Helvetica Neue", Arial, sans-serif; }
+    body { background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+    .container { max-width: 500px; margin: 20px auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { font-size: 18px; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #2c3e50; }
+    
+    .desc { background: #eef6ff; border-left: 4px solid #3498db; padding: 12px; font-size: 14px; line-height: 1.6; margin-bottom: 20px; border-radius: 0 6px 6px 0; }
+    
+    label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px; }
+    input[type="text"] { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 20px; }
+    
+    .btn { width: 100%; padding: 16px; font-size: 15px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 12px; text-align: left; line-height: 1.4; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-submit { background-color: #2ecc71; color: white; text-align: center; font-size: 16px; }
+    .btn-a { background-color: #3498db; color: white; }
+    .btn-b { background-color: #e74c3c; color: white; }
+    
+    .hidden { display: none; }
+    .sending { text-align: center; padding: 20px; font-weight: bold; color: #666; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>アルバイト休日制度についての意向調査</h1>
+
+  <!-- STEP 1: 名前入力 -->
+  <div id="step-1">
+    <div class="desc">
+      今後の休日ルールの変更に伴い、アルバイトスタッフの意識調査を行なっています。<br>お名前を入力して進んでください。
+    </div>
+    <label for="username">お名前（フルネーム）</label>
+    <input type="text" id="username" placeholder="例: 山田 太郎">
+    <button class="btn btn-submit" onclick="goToStep2()">選択画面へ進む</button>
+  </div>
+
+  <!-- STEP 2: 二択選択 -->
+  <div id="step-2" class="hidden">
+    <p>どちらの制度が良いか選択してください。</p>
+
+    <button class="btn btn-a" onclick="submitAnswer('前の定休制度')">
+      【A】前の定休制度が良い<br>
+      <span style="font-size:12px; font-weight:normal; opacity:0.9;">（定休日＋希望休で月10日休み）</span>
+    </button>
+    
+    <button class="btn btn-b" onclick="submitAnswer('新しい定休制度')">
+      【B】新しい定休制度が良い<br>
+      <span style="font-size:12px; font-weight:normal; opacity:0.9;">（希望休5日 / 会社調整3日 / 会社指定2日）</span>
+    </button>
+  </div>
+
+  <!-- 送信中表示 -->
+  <div id="step-sending" class="hidden sending">
+    送信中...
+  </div>
+
+  <!-- STEP 3: 送信完了画面 -->
+  <div id="step-3" class="hidden" style="text-align: center; padding: 20px 0;">
+    <h2 style="color: #2ecc71; font-size: 22px; margin-bottom: 10px;">ご回答ありがとうございました！</h2>
+    <p style="font-size: 14px; color: #666; line-height: 1.6;">
+      回答が正常に送信されました。<br>集計結果をまとめて共有いたします。
+    </p>
+  </div>
+</div>
+
+<script>
+  const GAS_URL = "https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec";
+
+  let currentName = "";
+
+  function goToStep2() {
+    const input = document.getElementById("username").value.trim();
+    if (!input) {
+      alert("お名前を入力してください");
+      return;
+    }
+    currentName = input;
+    document.getElementById("step-1").classList.add("hidden");
+    document.getElementById("step-2").classList.remove("hidden");
+  }
+
+  function submitAnswer(choice) {
+    if (!confirm(`「${choice}」で送信してよろしいですか？`)) return;
+
+    document.getElementById("step-2").classList.add("hidden");
+    document.getElementById("step-sending").classList.remove("hidden");
+
+    fetch(GAS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: currentName, choice: choice })
+    })
+    .then(() => {
+      document.getElementById("step-sending").classList.add("hidden");
+      document.getElementById("step-3").classList.remove("hidden");
+    })
+    .catch(err => {
+      alert("送信に失敗しました。時間をおいて再度お試しください。");
+      document.getElementById("step-sending").classList.add("hidden");
+      document.getElementById("step-2").classList.remove("hidden");
+      console.error(err);
+    });
+  }
+</script>
+
+</body>
+</html>
