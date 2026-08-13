@@ -169,7 +169,7 @@
         </div>
       </div>
 
-      <!-- 4. 理由（必須） -->
+      <!-- 4. 理由（必須・無ければ「なし」と入力） -->
       <div class="form-group">
         <label for="reason">そう希望する理由<span class="required">※必須</span></label>
         <div class="hint" style="margin-bottom: 6px;">
@@ -190,8 +190,8 @@
 </div>
 
 <script>
-  // ★ご自身のGASのWebアプリURL（https://script.google.com/macros/s/.../exec）を貼ってください
-  const GAS_URL = "ここにGASのURLを貼り付け";
+  // 社用アカウントのWebアプリURL
+  const GAS_URL = "https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec";
 
   const form = document.getElementById('gasForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -205,11 +205,13 @@
 
     const formData = new FormData(form);
 
+    // 組織内通信ブロック回避のための mode: 'no-cors' 設定
     fetch(GAS_URL, {
       method: 'POST',
-      body: formData
+      body: formData,
+      mode: 'no-cors'
     })
-    .then(response => {
+    .then(() => {
       surveyForm.style.display = 'none';
       thankYouMessage.style.display = 'block';
     })
