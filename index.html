@@ -3,99 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アルバイト休日制度アンケート</title>
+  <title>定休制度アンケート</title>
   <style>
-    * { box-sizing: border-box; font-family: "Helvetica Neue", Arial, sans-serif; }
-    body { background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
-    .container { max-width: 500px; margin: 20px auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h1 { font-size: 18px; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #2c3e50; }
-    
-    .desc { background: #eef6ff; border-left: 4px solid #3498db; padding: 12px; font-size: 14px; line-height: 1.6; margin-bottom: 20px; border-radius: 0 6px 6px 0; }
-    
-    label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px; }
-    input[type="text"] { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 20px; }
-    
-    .btn { width: 100%; padding: 16px; font-size: 15px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 12px; text-align: left; line-height: 1.4; transition: opacity 0.2s; }
-    .btn:hover { opacity: 0.9; }
-    .btn-submit { background-color: #2ecc71; color: white; text-align: center; font-size: 16px; }
-    .btn-a { background-color: #3498db; color: white; }
-    .btn-b { background-color: #e74c3c; color: white; }
-    
-    .hidden { display: none; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 24px;
+      font-size: 20px;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #444;
+      font-size: 15px;
+    }
+    .required {
+      color: #e74c3c;
+      font-size: 0.85em;
+      margin-left: 4px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .radio-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      transition: all 0.2s ease;
+    }
+    .radio-card:hover {
+      border-color: #3498db;
+      background-color: #f0f8ff;
+    }
+    .radio-card input[type="radio"] {
+      margin-right: 12px;
+      margin-top: 3px;
+      transform: scale(1.2);
+    }
+    .hint {
+      font-size: 0.85em;
+      color: #666;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    button {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #thankYouMessage {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    #thankYouMessage h3 {
+      color: #2ecc71;
+      font-size: 22px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>アルバイト休日制度についての意向調査</h1>
+  <div id="surveyForm">
+    <h2>定休制度についてのアンケート</h2>
+    <form id="gasForm">
+      
+      <!-- 1. お名前 -->
+      <div class="form-group">
+        <label for="name">お名前<span class="required">※必須</span></label>
+        <input type="text" id="name" name="name" placeholder="例：山田 太郎" required>
+      </div>
 
-  <!-- STEP 1: 名前入力 -->
-  <div id="step-1">
-    <div class="desc">
-      今後の休日ルールの変更に伴い、アルバイトスタッフの意識調査を行なっています。<br>お名前を入力して進んでください。
-    </div>
-    <label for="username">お名前（フルネーム）</label>
-    <input type="text" id="username" placeholder="例: 山田 太郎">
-    <button class="btn btn-submit" onclick="goToStep2()">選択画面へ進む</button>
+      <!-- 2. 制度選択 -->
+      <div class="form-group">
+        <label>どちらの定休制度が良いですか？<span class="required">※必須</span></label>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input type="radio" name="choice" value="前の定休制度" required>
+            <div><strong>前の定休制度</strong></div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="choice" value="新しい定休制度">
+            <div><strong>新しい定休制度</strong></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 3. 休みのスタイル希望 -->
+      <div class="form-group">
+        <label>休みの取り方についてのご希望<span class="required">※必須</span></label>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input type="radio" name="restType" value="連休希望" required>
+            <div>
+              <strong>連休にしたい</strong>
+              <div class="hint">例：日月休み、水木休み など</div>
+            </div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="restType" value="飛び休希望">
+            <div>
+              <strong>飛び休にしたい</strong>
+              <div class="hint">例：月水休み、金日休み など</div>
+            </div>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="restType" value="どちらでもよい">
+            <div>
+              <strong>どちらでもよい</strong>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 4. 理由（必須） -->
+      <div class="form-group">
+        <label for="reason">そう希望する理由<span class="required">※必須</span></label>
+        <div class="hint" style="margin-bottom: 6px;">
+          例：プライベートの予定を合わせるため、休んだ気にならないため、連休で体を休めたいから など<br>
+          <strong>※特にない場合は「なし」とご記入ください。</strong>
+        </div>
+        <textarea id="reason" name="reason" placeholder="理由を入力してください（ない場合は「なし」）" required></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn">回答を送信する</button>
+    </form>
   </div>
 
-  <!-- STEP 2: 二択選択 -->
-  <div id="step-2" class="hidden">
-    <p>どちらの制度が良いか選択してください。</p>
-
-    <button class="btn btn-a" onclick="submitAnswer('前の定休制度')">
-      【A】前の定休制度が良い<br>
-      <span style="font-size:12px; font-weight:normal; opacity:0.9;">（定休日＋希望休で月10日休み）</span>
-    </button>
-    
-    <button class="btn btn-b" onclick="submitAnswer('新しい定休制度')">
-      【B】新しい定休制度が良い<br>
-      <span style="font-size:12px; font-weight:normal; opacity:0.9;">（希望休5日 / 会社調整3日 / 会社指定2日）</span>
-    </button>
-  </div>
-
-  <!-- STEP 3: 送信完了画面 -->
-  <div id="step-3" class="hidden" style="text-align: center; padding: 20px 0;">
-    <h2 style="color: #2ecc71; font-size: 22px; margin-bottom: 10px;">ご回答ありがとうございました！</h2>
-    <p style="font-size: 14px; color: #666; line-height: 1.6;">
-      回答が正常に送信されました。<br>集計結果をまとめて共有いたします。
-    </p>
+  <div id="thankYouMessage">
+    <h3>ご回答ありがとうございました！</h3>
+    <p>送信が正常に完了いたしました。</p>
   </div>
 </div>
 
-<!-- 送信用隠しフォーム -->
-<iframe name="dummyIframe" id="dummyIframe" style="display:none;"></iframe>
-<form id="gasForm" action="https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec" method="POST" target="dummyIframe" style="display:none;">
-  <input type="text" name="name" id="gas_name">
-  <input type="text" name="choice" id="gas_choice">
-</form>
-
 <script>
-  let currentName = "";
+  // ★ご自身のGASのWebアプリURL（https://script.google.com/macros/s/.../exec）を貼ってください
+  const GAS_URL = "ここにGASのURLを貼り付け";
 
-  function goToStep2() {
-    const input = document.getElementById("username").value.trim();
-    if (!input) {
-      alert("お名前を入力してください");
-      return;
-    }
-    currentName = input;
-    document.getElementById("step-1").classList.add("hidden");
-    document.getElementById("step-2").classList.remove("hidden");
-  }
+  const form = document.getElementById('gasForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const surveyForm = document.getElementById('surveyForm');
+  const thankYouMessage = document.getElementById('thankYouMessage');
 
-  function submitAnswer(choice) {
-    if (!confirm(`「${choice}」で送信してよろしいですか？`)) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.innerText = '送信中...';
 
-    // フォームに値をセットして送信
-    document.getElementById("gas_name").value = currentName;
-    document.getElementById("gas_choice").value = choice;
-    document.getElementById("gasForm").submit();
+    const formData = new FormData(form);
 
-    // 画面切り替え
-    document.getElementById("step-2").classList.add("hidden");
-    document.getElementById("step-3").classList.remove("hidden");
-  }
+    fetch(GAS_URL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      surveyForm.style.display = 'none';
+      thankYouMessage.style.display = 'block';
+    })
+    .catch(error => {
+      alert('送信に失敗しました。もう一度試してください。');
+      submitBtn.disabled = false;
+      submitBtn.innerText = '回答を送信する';
+    });
+  });
 </script>
 
 </body>
