@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -169,7 +169,7 @@
         </div>
       </div>
 
-      <!-- 4. 理由（必須・無ければ「なし」と入力） -->
+      <!-- 4. 理由（必須） -->
       <div class="form-group">
         <label for="reason">そう希望する理由<span class="required">※必須</span></label>
         <div class="hint" style="margin-bottom: 6px;">
@@ -190,7 +190,7 @@
 </div>
 
 <script>
-  // 社用アカウントのWebアプリURL
+  // 社用GASのWebアプリURL
   const GAS_URL = "https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec";
 
   const form = document.getElementById('gasForm');
@@ -200,22 +200,25 @@
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    console.log("送信処理スタート");
+
     submitBtn.disabled = true;
     submitBtn.innerText = '送信中...';
 
     const formData = new FormData(form);
 
-    // 組織内通信ブロック回避のための mode: 'no-cors' 設定
     fetch(GAS_URL, {
       method: 'POST',
       body: formData,
       mode: 'no-cors'
     })
     .then(() => {
+      console.log("送信完了！");
       surveyForm.style.display = 'none';
       thankYouMessage.style.display = 'block';
     })
     .catch(error => {
+      console.error("エラー発生:", error);
       alert('送信に失敗しました。もう一度試してください。');
       submitBtn.disabled = false;
       submitBtn.innerText = '回答を送信する';
