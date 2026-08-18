@@ -6,7 +6,7 @@
   <title>定休制度アンケート</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #f4f6f8;
       margin: 0;
       padding: 20px;
@@ -67,11 +67,6 @@
       cursor: pointer;
       display: flex;
       align-items: flex-start;
-      transition: all 0.2s ease;
-    }
-    .radio-card:hover {
-      border-color: #3498db;
-      background-color: #f0f8ff;
     }
     .radio-card input[type="radio"] {
       margin-right: 12px;
@@ -94,14 +89,9 @@
       font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
     }
     button:hover {
       background-color: #2980b9;
-    }
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
     }
     #thankYouMessage {
       display: none;
@@ -112,6 +102,9 @@
       color: #2ecc71;
       font-size: 22px;
     }
+    iframe {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -119,7 +112,11 @@
 <div class="container">
   <div id="surveyForm">
     <h2>定休制度についてのアンケート</h2>
-    <form id="gasForm">
+    
+    <!-- 画面遷移を防ぐための隠しフレーム -->
+    <iframe name="hidden_iframe" id="hidden_iframe" onload="if(submitted){document.getElementById('surveyForm').style.display='none';document.getElementById('thankYouMessage').style.display='block';}"></iframe>
+
+    <form action="https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
       
       <!-- 1. お名前 -->
       <div class="form-group">
@@ -179,7 +176,7 @@
         <textarea id="reason" name="reason" placeholder="理由を入力してください（ない場合は「なし」）" required></textarea>
       </div>
 
-      <button type="submit" id="submitBtn">回答を送信する</button>
+      <button type="submit">回答を送信する</button>
     </form>
   </div>
 
@@ -190,40 +187,7 @@
 </div>
 
 <script>
-  // 社用GASのWebアプリURL
-  const GAS_URL = "https://script.google.com/a/macros/kcgrp.jp/s/AKfycbzC5xo2cJJ0U-PELr9m-jCZZ8C8_WVbcEnD9-7W10pYm4FWcFqHEFy9zXrVcCtkE69d/exec";
-
-  const form = document.getElementById('gasForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const surveyForm = document.getElementById('surveyForm');
-  const thankYouMessage = document.getElementById('thankYouMessage');
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    console.log("送信処理スタート");
-
-    submitBtn.disabled = true;
-    submitBtn.innerText = '送信中...';
-
-    const formData = new FormData(form);
-
-    fetch(GAS_URL, {
-      method: 'POST',
-      body: formData,
-      mode: 'no-cors'
-    })
-    .then(() => {
-      console.log("送信完了！");
-      surveyForm.style.display = 'none';
-      thankYouMessage.style.display = 'block';
-    })
-    .catch(error => {
-      console.error("エラー発生:", error);
-      alert('送信に失敗しました。もう一度試してください。');
-      submitBtn.disabled = false;
-      submitBtn.innerText = '回答を送信する';
-    });
-  });
+  var submitted = false;
 </script>
 
 </body>
